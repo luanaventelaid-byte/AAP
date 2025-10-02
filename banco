@@ -1,0 +1,37 @@
+-- Criação do Banco de Dados
+CREATE DATABASE IF NOT EXISTS samambaia_papelaria;
+USE samambaia_papelaria;
+
+-- Tabela de Produtos
+CREATE TABLE IF NOT EXISTS produto (
+    id_produto INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL,
+    descricao TEXT,
+    preco DECIMAL(10, 2) NOT NULL,
+    quantidade_estoque INT NOT NULL DEFAULT 0,
+    data_cadastro TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE KEY (nome)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Tabela de Vendas
+CREATE TABLE IF NOT EXISTS venda (
+    id_venda INT AUTO_INCREMENT PRIMARY KEY,
+    id_produto INT NOT NULL,
+    quantidade INT NOT NULL,
+    valor_total DECIMAL(10, 2) NOT NULL,
+    data_venda TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (id_produto) REFERENCES produto(id_produto) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Índices para melhor performance
+CREATE INDEX idx_produto_nome ON produto(nome);
+CREATE INDEX idx_venda_data ON venda(data_venda);
+CREATE INDEX idx_venda_produto ON venda(id_produto);
+
+-- Inserção de dados exemplo
+INSERT INTO produto (nome, descricao, preco, quantidade_estoque) VALUES
+('Caderno 10 Matérias', 'Caderno universitário com 200 folhas', 25.90, 50),
+('Caneta Azul', 'Caneta esferográfica azul', 2.50, 200),
+('Lápis HB', 'Lápis grafite número 2', 1.50, 150),
+('Borracha Branca', 'Borracha branca macia', 1.20, 100),
+('Régua 30cm', 'Régua transparente 30 centímetros', 3.80, 80);
